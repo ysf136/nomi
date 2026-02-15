@@ -1,0 +1,40 @@
+ .nova-calendar {
+  border-radius: 16px;
+  font-family: inherit;
+  color: #111;
+}
+.nova-calendar .react-calendar__navigation {
+  background: none;
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 8px;
+  justify-content: center;
+}
+.nova-calendar .react-calendar__navigation__label {
+  color: #3FB292;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+.nova-calendar .react-calendar__navigation button,
+.nova-calendar .react-calendar__navigation__arrow,
+.nova-calendar .react-calendar__month-view,
+.nova-calendar .react-calendar__year-view,
+.nova-calendar .react-calendar__decade-view,
+.nova-calendar .react-calendar__century-view,
+.nova-calendar .react-calendar__tile {
+  color: #111 !important;
+}
+.nova-calendar .react-calendar__tile {
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.nova-calendar .react-calendar__tile--active {
+  background: #3FB292 !important;
+  color: #fff !important;
+}
+.nova-calendar .react-calendar__tile:disabled {
+  background: #eee !important;
+  color: #bbb !important;
+}
+.nova-calendar .react-calendar__month-view {
+  border-radius: 0 0 16px 16px;
+}

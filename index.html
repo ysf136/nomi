@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA – AI-powered privacy management</title>
+  <meta name="description" content="Privacy made intelligent.">
+  <meta property="og:title" content="NOVA – AI-powered privacy management">
+  <meta property="og:description" content="Privacy made intelligent.">
+  <meta property="og:image" content="/public/opengraph-1200x630.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/public/favicon-32.png" sizes="32x32">
+  <link rel="icon" href="/public/favicon-16.png" sizes="16x16">
+  <link rel="icon" href="/public/favicon-48.png" sizes="48x48">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-white text-[#2D2F36] min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white border-b border-[#E5E7EB]">
+    <div class="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
+      <div class="flex items-center">
+        <img src="assets/nova_logo_horizontal.png" alt="NOVA Logo" class="h-8 w-auto" style="width:200px;max-width:200px;">
+      </div>
+      <nav class="hidden md:flex space-x-6 items-center">
+        <a href="#" class="hover:text-[#22B07D]">Home</a>
+        <a href="#" class="hover:text-[#22B07D]">Dashboard</a>
+        <a href="#" class="hover:text-[#22B07D]">Settings</a>
+        <button class="ml-4 px-4 py-2 bg-[#22B07D] text-white rounded hover:bg-[#00B37E] transition">Log in</button>
+      </nav>
+      <!-- Mobile Burger -->
+      <div class="md:hidden flex items-center">
+        <button id="burger" class="focus:outline-none">
+          <svg class="w-7 h-7" fill="none" stroke="#2D2F36" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Nav -->
+    <div id="mobileNav" class="md:hidden hidden px-4 pb-4 bg-white border-b border-[#E5E7EB]">
+      <a href="#" class="block py-2 hover:text-[#22B07D]">Home</a>
+      <a href="#" class="block py-2 hover:text-[#22B07D]">Dashboard</a>
+      <a href="#" class="block py-2 hover:text-[#22B07D]">Settings</a>
+      <button class="w-full mt-2 px-4 py-2 bg-[#22B07D] text-white rounded hover:bg-[#00B37E] transition">Log in</button>
+    </div>
+  </header>
+  <main class="flex-1 w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 px-4 py-10">
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col bg-[#F3F4F6] rounded-lg p-6 min-h-[400px] w-[240px]">
+      <div class="flex items-center mb-6">
+        <img src="assets/nova_logo_hexagon.png" alt="NOVA Icon" class="w-6 h-6 mr-2">
+        <span class="font-semibold text-lg">NOVA</span>
+      </div>
+      <nav class="flex flex-col gap-2">
+        <a href="#" class="flex items-center px-3 py-2 rounded transition bg-white text-[#22B07D] font-semibold border-l-4 border-[#22B07D]">
+          <span class="w-2 h-2 rounded-full bg-[#22B07D] mr-2"></span>Dashboard
+        </a>
+        <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-white transition text-[#2D2F36]">
+          <span class="w-2 h-2 rounded-full bg-[#F3F4F6] border border-[#E5E7EB] mr-2"></span>Settings
+        </a>
+      </nav>
+    </aside>
+    <!-- Content -->
+    <section class="flex flex-col items-center justify-center text-center py-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">AI-powered privacy management</h1>
+      <p class="text-lg md:text-xl mb-8 text-[#2D2F36]">Privacy made intelligent</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button class="px-8 py-3 bg-[#22B07D] text-white rounded shadow hover:bg-[#00B37E] transition font-semibold">Get started</button>
+        <button class="px-8 py-3 border-2 border-[#22B07D] text-[#22B07D] rounded shadow hover:bg-[#E6FAF3] transition font-semibold">Learn more</button>
+      </div>
+    </section>
+  </main>
+  <footer class="border-t border-[#E5E7EB] bg-white py-4 mt-8">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+      <div class="text-sm">© 2025 NOVA</div>
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:text-[#22B07D]">Impressum</a>
+        <a href="#" class="hover:text-[#22B07D]">Datenschutz</a>
+        <a href="#" class="hover:text-[#22B07D]">Kontakt</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // Mobile nav toggle
+    document.getElementById('burger').addEventListener('click', function() {
+      var nav = document.getElementById('mobileNav');
+      nav.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
