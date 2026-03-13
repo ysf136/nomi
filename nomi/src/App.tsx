@@ -31,6 +31,10 @@ import AvvReport from "./features/compliance/AvvReport";
 import AvvWizard from "./features/compliance/avv-wizard/AvvWizard";
 import AvvCaseList from "./features/compliance/AvvCaseList";
 import NotFound from "./features/NotFound";
+import Impressum from "./features/legal/Impressum";
+import Datenschutz from "./features/legal/Datenschutz";
+import AGB from "./features/legal/AGB";
+import CookieBanner from "./components/common/CookieBanner";
 import ApprovalQueue from "./features/approval/ApprovalQueue";
 import ReviewPanel from "./features/approval/ReviewPanel";
 import Verarbeitungstätigkeiten from "./features/customer/Verarbeitungstätigkeiten";
@@ -46,8 +50,8 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
-  const hideSidebarOn = new Set(["/", "/login", "/register"]); 
-  const hideNavbarOn = new Set(["/", "/login", "/register"]); 
+  const hideSidebarOn = new Set(["/", "/login", "/register", "/impressum", "/datenschutz", "/agb"]); 
+  const hideNavbarOn = new Set(["/", "/login", "/register", "/impressum", "/datenschutz", "/agb"]); 
   const hideFooterOn = new Set(["/", "/login", "/register"]);
   const hideChatOn = new Set(["/", "/login", "/register"]);
   const isSidebarHidden = hideSidebarOn.has(location.pathname);
@@ -88,6 +92,7 @@ function Layout({ children }: LayoutProps) {
         </div>
       </div>
       {!isChatHidden && <NomiChat />}
+      <CookieBanner />
     </>
   );
 }
@@ -152,6 +157,9 @@ function AppShell() {
               </RedirectIfAuthenticated>
             }
           />
+          <Route path="/impressum" element={<Impressum />} />
+          <Route path="/datenschutz" element={<Datenschutz />} />
+          <Route path="/agb" element={<AGB />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/demoanfordern" element={<Demoanfordern />} />
           <Route path="/Gespraech-vereinbaren" element={<GespraechVereinbaren />} />

@@ -59,18 +59,18 @@ export default function Footer() {
               Rechtliches
             </h4>
             <nav style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <a href="#impressum" style={{ color: "#D1D5DB", fontSize: 14 }}>
+              <Link to="/impressum" style={{ color: "#D1D5DB", fontSize: 14 }}>
                 Impressum
-              </a>
-              <a href="#datenschutz" style={{ color: "#D1D5DB", fontSize: 14 }}>
+              </Link>
+              <Link to="/datenschutz" style={{ color: "#D1D5DB", fontSize: 14 }}>
                 Datenschutzerklärung
-              </a>
-              <a href="#agb" style={{ color: "#D1D5DB", fontSize: 14 }}>
+              </Link>
+              <Link to="/agb" style={{ color: "#D1D5DB", fontSize: 14 }}>
                 AGB
-              </a>
-              <a href="#cookies" style={{ color: "#D1D5DB", fontSize: 14 }}>
+              </Link>
+              <Link to="/datenschutz" style={{ color: "#D1D5DB", fontSize: 14 }}>
                 Cookie-Richtlinie
-              </a>
+              </Link>
             </nav>
           </div>
 
@@ -80,8 +80,8 @@ export default function Footer() {
               Kontakt
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14, color: "#D1D5DB" }}>
-              <div>Yusuf Öztürk</div>
-              <div>Platzhalterstraße 1</div>
+              <div>Türkay Yusuf Öztürk</div>
+              <div>Albertstraße 21</div>
               <div>30451 Hannover</div>
               <a href="mailto:info@nova-compliance.app" style={{ color: tokens.colors.brand.primary }}>
                 info@nova-compliance.app

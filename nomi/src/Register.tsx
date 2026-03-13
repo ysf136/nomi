@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { tokens } from "./styles/tokens";
@@ -158,6 +158,8 @@ export default function Register() {
         },
         { merge: true },
       );
+      // E-Mail-Verifizierung senden
+      await sendEmailVerification(cred.user);
       nav(selectedPlan === "demo" ? "/live-demo" : "/welcome");
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code ?? "";

@@ -28,6 +28,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [emailNotVerified, setEmailNotVerified] = useState(false);
   const [resetMode, setResetMode] = useState(false);
 
   const primaryButtonStyle: React.CSSProperties = {
@@ -72,7 +73,10 @@ export default function Login() {
     setSuccess(null);
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      if (!cred.user.emailVerified) {
+        setEmailNotVerified(true);
+      }
       setSuccess("Login erfolgreich!");
       nav("/welcome");
     } catch (err: unknown) {
@@ -205,6 +209,11 @@ export default function Login() {
           {success && (
             <div style={{ color: tokens.colors.status.success, fontSize: 13, marginBottom: 12, padding: "8px 12px", background: "rgba(16,185,129,0.06)", borderRadius: 8 }}>
               {success}
+            </div>
+          )}
+          {emailNotVerified && (
+            <div style={{ color: "#D97706", fontSize: 13, marginBottom: 12, padding: "8px 12px", background: "rgba(217,119,6,0.06)", borderRadius: 8 }}>
+              Ihre E-Mail-Adresse wurde noch nicht bestätigt. Bitte prüfen Sie Ihren Posteingang.
             </div>
           )}
 

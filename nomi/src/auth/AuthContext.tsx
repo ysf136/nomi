@@ -20,6 +20,7 @@ type UserRecord = {
   plan: PlanId | null;
   role: RoleId;
   companyName: string | null;
+  emailVerified: boolean;
 };
 
 type AuthCtx = {
@@ -69,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           plan,
           role,
           companyName,
+          emailVerified: fbUser.emailVerified,
         });
       } else {
         setUser(null);
