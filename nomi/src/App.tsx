@@ -38,6 +38,9 @@ import CookieBanner from "./components/common/CookieBanner";
 import ApprovalQueue from "./features/approval/ApprovalQueue";
 import ReviewPanel from "./features/approval/ReviewPanel";
 import Verarbeitungstätigkeiten from "./features/customer/Verarbeitungstätigkeiten";
+import AdminDashboard from "./features/admin/AdminDashboard";
+import AdminUsers from "./features/admin/AdminUsers";
+import AdminAudit from "./features/admin/AdminAudit";
 
 // Simple Auth
 import { AuthProvider, useAuth } from "./auth/AuthContext";
@@ -130,6 +133,14 @@ function EnterpriseRoute({ children }: RouteGuardProps) {
   const { isEnterprise } = usePlanAccess();
   if (!user) return <Navigate to="/login" replace />;
   if (!isEnterprise) return <Navigate to="/welcome" replace />;
+  return <>{children}</>;
+}
+
+/** Admin-only Route (role === "admin") */
+function AdminRoute({ children }: RouteGuardProps) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== "admin") return <Navigate to="/welcome" replace />;
   return <>{children}</>;
 }
 
@@ -325,6 +336,32 @@ function AppShell() {
               <PlanRoute route="/verarbeitungstätigkeiten">
                 <Verarbeitungstätigkeiten />
               </PlanRoute>
+            }
+          />
+
+          {/* Admin Panel */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <AdminUsers />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/audit"
+            element={
+              <AdminRoute>
+                <AdminAudit />
+              </AdminRoute>
             }
           />
 

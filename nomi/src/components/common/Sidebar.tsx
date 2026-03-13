@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { usePlanAccess } from "../../hooks/usePlanAccess";
+import { useAuth } from "../../auth/AuthContext";
 
 const NAV_ITEMS = [
 	{ to: "/dashboard", label: "Dashboard", icon: "▣" },
@@ -19,6 +20,8 @@ const NAV_ITEMS = [
 export default function Sidebar() {
 	const location = useLocation();
 	const { canAccessRoute, plan } = usePlanAccess();
+	const { user } = useAuth();
+	const isAdmin = user?.role === "admin";
 
 	const visibleItems = NAV_ITEMS.filter((item) => canAccessRoute(item.to));
 
@@ -179,6 +182,35 @@ export default function Sidebar() {
 					);
 				})}
 			</nav>
+
+			{isAdmin && (
+				<>
+					<div style={{ height: 1, background: "rgba(0,0,0,0.06)", margin: "12px 10px" }} />
+					<div style={{ padding: "4px 14px 2px", fontSize: 10, fontWeight: 700, color: "#9CA3AF", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+						Admin
+					</div>
+					<nav className="nova-sidebar-nav">
+						{[
+							{ to: "/admin", label: "Übersicht", icon: "⊞" },
+							{ to: "/admin/users", label: "Benutzer", icon: "👥" },
+							{ to: "/admin/audit", label: "Audit-Log", icon: "📜" },
+						].map((item) => {
+							const isActive = location.pathname === item.to;
+							return (
+								<Link
+									key={item.to}
+									to={item.to}
+									className={`nova-sidebar-link ${isActive ? "active" : ""}`}
+									aria-current={isActive ? "page" : undefined}
+								>
+									<span className="nova-sidebar-icon">{item.icon}</span>
+									<span className="nova-sidebar-label">{item.label}</span>
+								</Link>
+							);
+						})}
+					</nav>
+				</>
+			)}
 		</aside>
 	);
 }
