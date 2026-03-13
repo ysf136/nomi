@@ -1,0 +1,219 @@
+/**
+ * NOVA Global Mobile Styles
+ * Responsive Design für alle Bildschirmgrößen
+ */
+
+:root {
+  --mobile-breakpoint: 768px;
+  --tablet-breakpoint: 1024px;
+  --desktop-breakpoint: 1280px;
+}
+
+/* Base mobile-first styles */
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Touch-friendly buttons (min 44x44px WCAG AAA) */
+button,
+a[href],
+input[type="submit"],
+input[type="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 16px;
+}
+
+/* Mobile: Stack everything vertically */
+@media (max-width: 767px) {
+  /* Typography */
+  h1 {
+    font-size: 1.75rem !important; /* 28px */
+  }
+
+  h2 {
+    font-size: 1.5rem !important; /* 24px */
+  }
+
+  h3 {
+    font-size: 1.25rem !important; /* 20px */
+  }
+
+  /* Spacing */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Forms */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Verhindert Zoom auf iOS */
+    padding: 12px;
+  }
+
+  /* Tables werden zu Karten */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Grid zu Single Column */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  /* Sidebar verstecken auf Mobile (via App.tsx Logic) */
+  aside[role="navigation"] {
+    position: fixed;
+    left: -100%;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  aside[role="navigation"].open {
+    left: 0;
+  }
+
+  /* Bottom Navigation für Mobile (optional) */
+  .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e0e4ea;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 999;
+  }
+
+  /* Floating Action Button - Kleinere Größe */
+  .fab-button {
+    width: 48px !important;
+    height: 48px !important;
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+
+  /* Modal/Dialog - Fullscreen auf Mobile */
+  .modal,
+  .dialog {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    border-radius: 0 !important;
+  }
+
+  /* Cards - Full Width */
+  .card {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  /* Navbar - Compact */
+  nav.navbar {
+    padding: 8px 12px !important;
+  }
+
+  nav.navbar img {
+    height: 28px !important;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    max-width: 720px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* Landscape Orientation auf Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Reduziere Padding bei kleiner Höhe */
+  main {
+    padding: 12px !important;
+  }
+
+  .fab-button {
+    display: none; /* Verstecke FAB im Landscape */
+  }
+}
+
+/* High DPI Displays (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Schärfere Bilder */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Dark Mode Support (optional) */
+@media (prefers-color-scheme: dark) {
+  /* Später implementieren */
+}
+
+/* Reduced Motion für Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Utility Classes */
+.hide-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: block;
+  }
+
+  .show-mobile {
+    display: none;
+  }
+}
+
+.show-mobile {
+  display: block;
+}
+
+/* Flex helpers */
+.flex-mobile-col {
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .flex-mobile-col {
+    flex-direction: row;
+  }
+}

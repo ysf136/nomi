@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function hasRole(role) {
+      return isSignedIn() && userDoc().data.role == role;
+    }
+
+    function isReviewer() {
+      return hasRole("reviewer") || hasRole("admin");
+    }
+
+    function hasPlan(plan) {
+      return isSignedIn() && userDoc().data.plan == plan;
+    }
+
+    function isNotDemo() {
+      return isSignedIn() && userDoc().data.plan != "demo";
+    }
+
+    // Gültige Pläne
+    function validPlan(val) {
+      return val == "demo" || val == "pro" || val == "enterprise";
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create: if isSignedIn() && request.auth.uid == userId
+                    && validPlan(request.resource.data.plan);
+      allow update: if isSignedIn() && request.auth.uid == userId
+                    && (!("plan" in request.resource.data) || request.resource.data.plan == resource.data.plan);
+      allow delete: if false;
+    }
+
+    match /incidents/{incidentId} {
+      allow create: if isSignedIn() && isNotDemo()
+                    && request.resource.data.userId == request.auth.uid;
+      allow read, update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /approvals/{approvalId} {
+      allow create: if isSignedIn() && hasPlan("enterprise");
+      allow read, update: if isReviewer();
+      allow delete: if false;
+    }
+
+    match /auditLogs/{logId} {
+      allow create: if isSignedIn();
+      allow read: if isReviewer();
+      allow update, delete: if false;
+    }
+
+    match /avvCases/{caseId} {
+      allow create: if isSignedIn() && isNotDemo()
+                    && request.resource.data.userId == request.auth.uid;
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == resource.data.userId;
+      allow delete: if false;
+    }
+
+    match /Termine/{terminId} {
+      allow create: if true;
+      allow read: if isSignedIn();
+      allow update, delete: if false;
+    }
+  }
+}

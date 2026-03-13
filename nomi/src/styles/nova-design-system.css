@@ -1,0 +1,622 @@
+/*  ═══════════════════════════════════════════════════════════════
+    NOVA Design System — Glassmorphism + Neon Glow
+    Global styles, animations, utility classes
+    ═══════════════════════════════════════════════════════════════ */
+
+/* ── Google Font (Inter for UI, JetBrains Mono for code) ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  /* Brand */
+  --nova-primary: #3FB292;
+  --nova-primary-light: #5FCFAD;
+  --nova-primary-dark: #2d9d7f;
+  --nova-primary-glow: rgba(63, 178, 146, 0.35);
+  --nova-primary-subtle: rgba(63, 178, 146, 0.08);
+
+  /* Neutrals */
+  --nova-dark: #0F1A1A;
+  --nova-dark-soft: #183939;
+  --nova-text: #1F2937;
+  --nova-text-secondary: #6B7280;
+  --nova-text-muted: #9CA3AF;
+
+  /* Surfaces */
+  --nova-bg: #F0F2F5;
+  --nova-bg-gradient: linear-gradient(135deg, #EDF0F4 0%, #E8F0ED 50%, #F0F2F5 100%);
+  --nova-card: rgba(255, 255, 255, 0.72);
+  --nova-card-hover: rgba(255, 255, 255, 0.88);
+  --nova-sidebar-bg: rgba(255, 255, 255, 0.65);
+  --nova-navbar-bg: rgba(255, 255, 255, 0.70);
+
+  /* Borders */
+  --nova-border: rgba(255, 255, 255, 0.18);
+  --nova-border-solid: #E0E4EA;
+
+  /* Shadows */
+  --nova-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --nova-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --nova-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.10);
+  --nova-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --nova-shadow-glow: 0 0 20px rgba(63, 178, 146, 0.20);
+  --nova-shadow-glow-hover: 0 8px 32px rgba(63, 178, 146, 0.25), 0 0 20px rgba(63, 178, 146, 0.15);
+  --nova-shadow-neon: 0 0 8px rgba(63, 178, 146, 0.4), 0 0 24px rgba(63, 178, 146, 0.15);
+  --nova-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  --nova-shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.10), 0 0 30px rgba(63, 178, 146, 0.10), inset 0 0 0 1px rgba(255, 255, 255, 0.30);
+
+  /* Blur */
+  --nova-blur-sm: 8px;
+  --nova-blur-md: 16px;
+  --nova-blur-lg: 24px;
+  --nova-blur-xl: 40px;
+
+  /* Radii */
+  --nova-radius-sm: 6px;
+  --nova-radius-md: 10px;
+  --nova-radius-lg: 14px;
+  --nova-radius-xl: 20px;
+  --nova-radius-2xl: 24px;
+  --nova-radius-full: 9999px;
+
+  /* Transitions */
+  --nova-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --nova-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --nova-transition-fast: 150ms var(--nova-ease);
+  --nova-transition-base: 250ms var(--nova-ease);
+  --nova-transition-slow: 400ms var(--nova-ease);
+  --nova-transition-spring: 500ms var(--nova-ease-spring);
+
+  /* Status */
+  --nova-success: #10B981;
+  --nova-warning: #F59E0B;
+  --nova-danger: #EF4444;
+  --nova-info: #6366F1;
+
+  /* Font */
+  --nova-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --nova-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--nova-font);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--nova-text);
+  background: var(--nova-bg-gradient);
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--nova-primary);
+  text-decoration: none;
+  transition: color var(--nova-transition-fast);
+}
+a:hover {
+  color: var(--nova-primary-dark);
+}
+
+/* ── Accessibility ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--nova-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-to-main {
+  position: absolute;
+  top: -48px;
+  left: 0;
+  background: var(--nova-primary);
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 0 0 var(--nova-radius-md) 0;
+  z-index: 100;
+  font-weight: 600;
+  transition: top var(--nova-transition-fast);
+}
+.skip-to-main:focus {
+  top: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Glass Card Base ───────────────────────────────────────── */
+.nova-glass {
+  background: var(--nova-card);
+  backdrop-filter: blur(var(--nova-blur-lg));
+  -webkit-backdrop-filter: blur(var(--nova-blur-lg));
+  border: 1px solid var(--nova-border);
+  border-radius: var(--nova-radius-xl);
+  box-shadow: var(--nova-shadow-card);
+  transition:
+    box-shadow var(--nova-transition-base),
+    transform var(--nova-transition-base),
+    background var(--nova-transition-base);
+}
+
+.nova-glass:hover {
+  box-shadow: var(--nova-shadow-card-hover);
+  transform: translateY(-2px);
+  background: var(--nova-card-hover);
+}
+
+.nova-glass-static {
+  background: var(--nova-card);
+  backdrop-filter: blur(var(--nova-blur-lg));
+  -webkit-backdrop-filter: blur(var(--nova-blur-lg));
+  border: 1px solid var(--nova-border);
+  border-radius: var(--nova-radius-xl);
+  box-shadow: var(--nova-shadow-card);
+}
+
+/* ── Neon Glow Border ──────────────────────────────────────── */
+.nova-glow-border {
+  position: relative;
+}
+.nova-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(63, 178, 146, 0.4) 0%,
+    rgba(63, 178, 146, 0.0) 40%,
+    rgba(63, 178, 146, 0.0) 60%,
+    rgba(63, 178, 146, 0.3) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--nova-transition-base);
+}
+.nova-glow-border:hover::before {
+  opacity: 1;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.nova-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--nova-radius-md);
+  font-family: var(--nova-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    all var(--nova-transition-fast),
+    transform var(--nova-transition-spring);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.nova-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.25) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 300ms;
+}
+.nova-btn:active::after {
+  opacity: 1;
+}
+
+.nova-btn-primary {
+  background: var(--nova-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(63, 178, 146, 0.30);
+}
+.nova-btn-primary:hover {
+  background: var(--nova-primary-dark);
+  box-shadow: var(--nova-shadow-glow-hover);
+  transform: translateY(-1px);
+}
+.nova-btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.nova-btn-secondary {
+  background: rgba(255, 255, 255, 0.60);
+  color: var(--nova-text);
+  border: 1px solid var(--nova-border-solid);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--nova-shadow-sm);
+}
+.nova-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--nova-primary);
+  box-shadow: 0 0 0 1px var(--nova-primary), var(--nova-shadow-md);
+  transform: translateY(-1px);
+}
+
+.nova-btn-ghost {
+  background: transparent;
+  color: var(--nova-text-secondary);
+  border: none;
+}
+.nova-btn-ghost:hover {
+  background: var(--nova-primary-subtle);
+  color: var(--nova-primary);
+}
+
+.nova-btn-danger {
+  background: var(--nova-danger);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+.nova-btn-danger:hover {
+  background: #DC2626;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+.nova-btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: var(--nova-radius-sm);
+}
+
+.nova-btn-lg {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: var(--nova-radius-lg);
+}
+
+/* ── Inputs ────────────────────────────────────────────────── */
+.nova-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(var(--nova-blur-sm));
+  border: 1px solid var(--nova-border-solid);
+  border-radius: var(--nova-radius-md);
+  font-family: var(--nova-font);
+  font-size: 14px;
+  color: var(--nova-text);
+  transition: all var(--nova-transition-fast);
+}
+.nova-input:focus {
+  outline: none;
+  border-color: var(--nova-primary);
+  box-shadow: 0 0 0 3px rgba(63, 178, 146, 0.15), var(--nova-shadow-sm);
+  background: rgba(255, 255, 255, 0.75);
+}
+.nova-input::placeholder {
+  color: var(--nova-text-muted);
+}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.nova-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--nova-radius-full);
+  letter-spacing: 0.3px;
+}
+
+.nova-badge-primary {
+  background: rgba(63, 178, 146, 0.12);
+  color: var(--nova-primary-dark);
+}
+.nova-badge-success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+.nova-badge-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #92400E;
+}
+.nova-badge-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #991B1B;
+}
+.nova-badge-info {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4338CA;
+}
+.nova-badge-neutral {
+  background: rgba(107, 114, 128, 0.12);
+  color: #374151;
+}
+
+/* ── Progress Ring ─────────────────────────────────────────── */
+.nova-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.nova-ring-value {
+  position: absolute;
+  font-weight: 700;
+  color: var(--nova-dark-soft);
+}
+
+/* ── Scroll Reveal Animations ──────────────────────────────── */
+.nova-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nova-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nova-reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nova-reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nova-reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nova-reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Staggered children */
+.nova-stagger > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nova-stagger.visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(2) { transition-delay: 60ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(3) { transition-delay: 120ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(4) { transition-delay: 180ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(5) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(6) { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(7) { transition-delay: 360ms; opacity: 1; transform: translateY(0); }
+.nova-stagger.visible > *:nth-child(8) { transition-delay: 420ms; opacity: 1; transform: translateY(0); }
+
+/* ── Page Transitions ──────────────────────────────────────── */
+.nova-page-enter {
+  animation: novaPageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes novaPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Skeleton Shimmer ──────────────────────────────────────── */
+.nova-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.12) 40%,
+    rgba(255, 255, 255, 0.04) 80%
+  );
+  background-size: 300% 100%;
+  animation: novaShimmer 1.8s ease-in-out infinite;
+  border-radius: var(--nova-radius-md);
+}
+
+@keyframes novaShimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: -100% 50%; }
+}
+
+/* Light mode shimmer */
+.nova-skeleton-light {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 40%,
+    #f0f0f0 80%
+  );
+  background-size: 300% 100%;
+  animation: novaShimmer 1.8s ease-in-out infinite;
+  border-radius: var(--nova-radius-md);
+}
+
+/* ── Spinner ───────────────────────────────────────────────── */
+.nova-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(63, 178, 146, 0.15);
+  border-top-color: var(--nova-primary);
+  border-radius: 50%;
+  animation: novaSpin 0.7s linear infinite;
+}
+
+@keyframes novaSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Glow Pulse ────────────────────────────────────────────── */
+@keyframes novaGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(63, 178, 146, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(63, 178, 146, 0.5), 0 0 48px rgba(63, 178, 146, 0.15);
+  }
+}
+
+.nova-pulse {
+  animation: novaGlowPulse 2s ease-in-out infinite;
+}
+
+/* ── Floating Glow Orbs (decorative bg) ────────────────────── */
+.nova-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: novaFloat 8s ease-in-out infinite;
+}
+
+@keyframes novaFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
+}
+
+/* ── Tooltip ───────────────────────────────────────────────── */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 12px;
+  background: var(--nova-dark);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--nova-radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all var(--nova-transition-fast);
+  z-index: 60;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(63, 178, 146, 0.25);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(63, 178, 146, 0.45);
+}
+
+/* ── Utility Classes ───────────────────────────────────────── */
+.nova-container {
+  width: min(1120px, 94%);
+  margin-inline: auto;
+}
+
+.nova-text-gradient {
+  background: linear-gradient(135deg, var(--nova-primary) 0%, var(--nova-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nova-text-gradient-dark {
+  background: linear-gradient(135deg, var(--nova-primary) 0%, var(--nova-dark-soft) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nova-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--nova-border-solid) 50%, transparent 100%);
+  border: none;
+  margin: 1rem 0;
+}
+
+/* ── Responsive helpers ────────────────────────────────────── */
+@media (max-width: 767px) {
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+
+  .nova-container {
+    padding-inline: 1rem;
+  }
+
+  button, a[href] {
+    min-height: 44px;
+  }
+}
+
+/* ── Reduced Motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .nova-reveal,
+  .nova-reveal-left,
+  .nova-reveal-scale,
+  .nova-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
