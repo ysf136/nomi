@@ -82,10 +82,10 @@ const avvSchema = z.object({
   fileSizeKB: z.number().int().positive().max(10_240).optional(),
 });
 
-async function callClaude(systemPrompt, userPrompt, modelOverride) {
+async function callClaude(systemPrompt, userPrompt, modelOverride, hasExamples = false) {
   const response = await anthropic.messages.create({
     model: modelOverride || process.env.ANTHROPIC_MODEL || "claude-3-5-sonnet-20241022",
-    max_tokens: 800,
+    max_tokens: hasExamples ? 1200 : 800,
     temperature: 0.2,
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
@@ -116,8 +116,9 @@ app.post("/api/incident-assistant", rateLimit, async (req, res) => {
       return res.status(400).json({ message: "Unsupported provider" });
     }
     const payload = incidentSchema.parse(req.body.incident);
-    const userPrompt = INCIDENT_USER_PROMPT(payload);
-    const result = await callClaude(INCIDENT_SYSTEM_PROMPT, userPrompt, req.body.model);
+    const examples = Array.isArray(req.body.examples) ? req.body.examples.slice(0, 3) : [];
+    const userPrompt = INCIDENT_USER_PROMPT(payload, examples);
+    const result = await callClaude(INCIDENT_SYSTEM_PROMPT, userPrompt, req.body.model, examples.length > 0);
     res.json(parseModelJson(result));
   } catch (error) {
     console.error(error);
@@ -131,8 +132,9 @@ app.post("/api/compliance-assistant", rateLimit, async (req, res) => {
       return res.status(400).json({ message: "Unsupported provider" });
     }
     const payload = complianceSchema.parse(req.body.system);
-    const userPrompt = COMPLIANCE_USER_PROMPT(payload);
-    const result = await callClaude(COMPLIANCE_SYSTEM_PROMPT, userPrompt, req.body.model);
+    const examples = Array.isArray(req.body.examples) ? req.body.examples.slice(0, 3) : [];
+    const userPrompt = COMPLIANCE_USER_PROMPT(payload, examples);
+    const result = await callClaude(COMPLIANCE_SYSTEM_PROMPT, userPrompt, req.body.model, examples.length > 0);
     res.json(parseModelJson(result));
   } catch (error) {
     console.error(error);
@@ -146,8 +148,9 @@ app.post("/api/avv-assistant", rateLimit, async (req, res) => {
       return res.status(400).json({ message: "Unsupported provider" });
     }
     const payload = avvSchema.parse(req.body.avv);
-    const userPrompt = AVV_USER_PROMPT(payload);
-    const result = await callClaude(AVV_SYSTEM_PROMPT, userPrompt, req.body.model);
+    const examples = Array.isArray(req.body.examples) ? req.body.examples.slice(0, 3) : [];
+    const userPrompt = AVV_USER_PROMPT(payload, examples);
+    const result = await callClaude(AVV_SYSTEM_PROMPT, userPrompt, req.body.model, examples.length > 0);
     res.json(parseModelJson(result));
   } catch (error) {
     console.error(error);

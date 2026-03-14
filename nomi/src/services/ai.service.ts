@@ -7,7 +7,18 @@ import {
   createDefaultAiProvider,
   IncidentAssistantResult,
   AvvAssistantResult,
+  FewShotExample,
 } from "./ai.provider";
+import { getGoldenExamples, GoldenDomain } from "./golden-examples.service";
+
+async function loadExamples(domain: GoldenDomain): Promise<FewShotExample[]> {
+  try {
+    const examples = await getGoldenExamples(domain, true, 3);
+    return examples.map((e) => ({ input: e.input, output: e.output }));
+  } catch {
+    return [];
+  }
+}
 
 const aiCircuitBreaker = new CircuitBreaker({
   failureThreshold: 3,
@@ -99,8 +110,9 @@ export async function analyzeIncident(input: {
 }): Promise<IncidentAssistantResult> {
   return aiCircuitBreaker.execute(async () => {
     try {
+      const examples = await loadExamples("incident");
       const result = await withRetry(
-        () => provider.analyzeIncident({ description: input.description, incident: input.incident as unknown as Record<string, unknown> }),
+        () => provider.analyzeIncident({ description: input.description, incident: input.incident as unknown as Record<string, unknown>, examples }),
         { retries: 2, baseDelayMs: 600 }
       );
 
@@ -137,8 +149,9 @@ export async function assessCompliance(input: {
 }): Promise<ComplianceAssessment> {
   return aiCircuitBreaker.execute(async () => {
     try {
+      const complianceExamples = await loadExamples("compliance");
       const result = await withRetry(
-        () => provider.assessCompliance({ system: input.system as unknown as Record<string, unknown> }),
+        () => provider.assessCompliance({ system: input.system as unknown as Record<string, unknown>, examples: complianceExamples }),
         { retries: 2, baseDelayMs: 600 }
       );
 
@@ -188,8 +201,9 @@ export async function analyzeAvv(input: {
 }): Promise<AvvAssistantResult> {
   return aiCircuitBreaker.execute(async () => {
     try {
+      const avvExamples = await loadExamples("avv");
       const result = await withRetry(
-        () => provider.analyzeAvv({ avv: input.avv }),
+        () => provider.analyzeAvv({ avv: input.avv, examples: avvExamples }),
         { retries: 2, baseDelayMs: 600 }
       );
 

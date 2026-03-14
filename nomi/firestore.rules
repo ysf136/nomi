@@ -73,5 +73,10 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow update, delete: if false;
     }
+
+    match /goldenExamples/{exampleId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if hasRole("admin");
+    }
   }
 }

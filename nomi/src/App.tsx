@@ -41,6 +41,7 @@ import Verarbeitungstätigkeiten from "./features/customer/Verarbeitungstätigke
 import AdminDashboard from "./features/admin/AdminDashboard";
 import AdminUsers from "./features/admin/AdminUsers";
 import AdminAudit from "./features/admin/AdminAudit";
+import AdminGoldenExamples from "./features/admin/AdminGoldenExamples";
 
 // Simple Auth
 import { AuthProvider, useAuth } from "./auth/AuthContext";
@@ -361,6 +362,14 @@ function AppShell() {
             element={
               <AdminRoute>
                 <AdminAudit />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/golden-examples"
+            element={
+              <AdminRoute>
+                <AdminGoldenExamples />
               </AdminRoute>
             }
           />

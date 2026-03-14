@@ -1,6 +1,7 @@
 import type { useAvvWizard } from "./useAvvWizard";
 import type { AvvRecommendation } from "../../../services/ai.provider";
 import { tokens } from "../../../styles/tokens";
+import AiFeedback from "../../../components/common/AiFeedback";
 
 type Props = { wizard: ReturnType<typeof useAvvWizard> };
 
@@ -145,6 +146,12 @@ export default function StepResult({ wizard }: Props) {
       <Section title="Technische & organisatorische Maßnahmen (Art. 32)">
         <p style={{ margin: 0, fontSize: 13, color: tokens.colors.neutral[600], lineHeight: 1.5 }}>{result.toms}</p>
       </Section>
+
+      <AiFeedback
+        domain="avv"
+        input={{ fileName: state.fileName ?? "unbekannt", documentText: (state.extractedText ?? "").slice(0, 500) }}
+        output={result as unknown as Record<string, unknown>}
+      />
 
       {/* Navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>

@@ -11,6 +11,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { sanitizeText } from "../../lib/sanitizers";
 import { downloadCSV, downloadJSON } from "../../lib/exporters";
 import { tokens } from "../../styles/tokens";
+import AiFeedback from "../../components/common/AiFeedback";
 
 const STORAGE_KEY = "nova_incident_last_result_v1";
 const HISTORY_KEY = "nova_incident_history_v1";
@@ -327,6 +328,17 @@ export default function IncidentResult() {
 
         <h3>Dokumentationstext</h3>
         <div style={{ whiteSpace: "pre-wrap" }}>{result.doc_text}</div>
+
+        <AiFeedback
+          domain="incident"
+          input={{
+            description: input,
+            incidentType: result.data_categories?.[0] ?? "unbekannt",
+            affectedPeople: result.data_subjects?.anzahl ?? "",
+            date: incidentDate,
+          }}
+          output={result as unknown as Record<string, unknown>}
+        />
         </div>
 
         {/* Incident History */}

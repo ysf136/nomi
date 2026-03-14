@@ -194,6 +194,7 @@ export default function Sidebar() {
 							{ to: "/admin", label: "Übersicht", icon: "⊞" },
 							{ to: "/admin/users", label: "Benutzer", icon: "👥" },
 							{ to: "/admin/audit", label: "Audit-Log", icon: "📜" },
+							{ to: "/admin/golden-examples", label: "Goldstandard", icon: "🏆" },
 						].map((item) => {
 							const isActive = location.pathname === item.to;
 							return (

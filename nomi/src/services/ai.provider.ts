@@ -36,12 +36,14 @@ export type AvvAssistantResult = {
 
 export type AiProviderName = "claude" | "openai" | "mock";
 
+export type FewShotExample = { input: Record<string, unknown>; output: Record<string, unknown> };
+
 export type AiProvider = {
   name: AiProviderName;
   model?: string;
-  analyzeIncident: (payload: { description: string; incident: Record<string, unknown> }) => Promise<IncidentAssistantResult>;
-  assessCompliance: (payload: { system: Record<string, unknown> }) => Promise<ComplianceAssessment>;
-  analyzeAvv: (payload: { avv: { documentText: string; fileName: string; fileSizeKB?: number } }) => Promise<AvvAssistantResult>;
+  analyzeIncident: (payload: { description: string; incident: Record<string, unknown>; examples?: FewShotExample[] }) => Promise<IncidentAssistantResult>;
+  assessCompliance: (payload: { system: Record<string, unknown>; examples?: FewShotExample[] }) => Promise<ComplianceAssessment>;
+  analyzeAvv: (payload: { avv: { documentText: string; fileName: string; fileSizeKB?: number }; examples?: FewShotExample[] }) => Promise<AvvAssistantResult>;
 };
 
 export type HttpAiProviderOptions = {
@@ -63,27 +65,31 @@ export class HttpAiProvider implements AiProvider {
     });
   }
 
-  async analyzeIncident(payload: { description: string; incident: Record<string, unknown> }) {
+  async analyzeIncident(payload: { description: string; incident: Record<string, unknown>; examples?: FewShotExample[] }) {
     return this.api.post<IncidentAssistantResult>("/incident-assistant", {
       provider: this.name,
       model: this.model,
-      ...payload,
+      description: payload.description,
+      incident: payload.incident,
+      examples: payload.examples,
     });
   }
 
-  async assessCompliance(payload: { system: Record<string, unknown> }) {
+  async assessCompliance(payload: { system: Record<string, unknown>; examples?: FewShotExample[] }) {
     return this.api.post<ComplianceAssessment>("/compliance-assistant", {
       provider: this.name,
       model: this.model,
-      ...payload,
+      system: payload.system,
+      examples: payload.examples,
     });
   }
 
-  async analyzeAvv(payload: { avv: { documentText: string; fileName: string; fileSizeKB?: number } }) {
+  async analyzeAvv(payload: { avv: { documentText: string; fileName: string; fileSizeKB?: number }; examples?: FewShotExample[] }) {
     return this.api.post<AvvAssistantResult>("/avv-assistant", {
       provider: this.name,
       model: this.model,
-      ...payload,
+      avv: payload.avv,
+      examples: payload.examples,
     });
   }
 }
