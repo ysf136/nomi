@@ -32,12 +32,17 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isSignedIn() && request.auth.uid == userId;
+      // Admins können alle User-Dokumente lesen und bearbeiten (inkl. Plan & Rolle)
+      allow read: if isSignedIn() && (request.auth.uid == userId || hasRole("admin"));
       allow create: if isSignedIn() && request.auth.uid == userId
                     && validPlan(request.resource.data.plan);
-      allow update: if isSignedIn() && request.auth.uid == userId
-                    && (!("plan" in request.resource.data) || request.resource.data.plan == resource.data.plan);
-      allow delete: if false;
+      // Admin darf Plan ändern; normale User dürfen alles außer Plan ändern
+      allow update: if isSignedIn() && (
+                      hasRole("admin")
+                      || (request.auth.uid == userId
+                          && (!("plan" in request.resource.data) || request.resource.data.plan == resource.data.plan))
+                    );
+      allow delete: if hasRole("admin");
     }
 
     match /incidents/{incidentId} {

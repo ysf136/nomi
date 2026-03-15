@@ -54,7 +54,8 @@ const ALWAYS_ALLOWED = new Set([
 
 export function usePlanAccess() {
   const { user } = useAuth();
-  const plan: PlanId = user?.plan ?? "demo";
+  // Kein Plan-Wert → "pro" als Fallback (z.B. interne Testkonten ohne gesetzten Plan)
+  const plan: PlanId = user?.plan ?? "pro";
 
   /** Darf der User diese Sidebar-Route sehen? */
   function canAccessRoute(route: string): boolean {
