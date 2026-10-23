@@ -1,6 +1,6 @@
 # 🚀 NOVA Project Roadmap & Development Plan
 
-**Status**: In Development (Phase 1)  
+**Status**: In Development – Kernfeatures (AVV, Incident, AI Act, Approval, Audit, Admin) vorhanden; aktuell: Absicherung (Server-Auth), Art.-28-Schema, danach Upload/Worker/Report  
 **Last Updated**: 2026-02-15  
 **Target**: Professional SaaS-Grade Compliance Platform
 

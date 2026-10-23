@@ -16,7 +16,7 @@ Request body:
 ```json
 {
   "provider": "claude",
-  "model": "claude-3-5-sonnet-20241022",
+  "model": "claude-sonnet-4-5",
   "description": "string",
   "incident": {
     "description": "string",
@@ -61,7 +61,7 @@ Request body:
 ```json
 {
   "provider": "claude",
-  "model": "claude-3-5-sonnet-20241022",
+  "model": "claude-sonnet-4-5",
   "system": {
     "name": "string",
     "description": "string",
@@ -99,5 +99,6 @@ All endpoints return a JSON error with a message:
 
 ## Notes
 - `provider` defaults to `claude`.
-- `model` defaults to `claude-3-5-sonnet-20241022`.
+- The model is set server-side via `ANTHROPIC_MODEL` (default `claude-sonnet-4-5`); a `model` sent by the client is ignored to protect costs.
+- All `/api/*-assistant` endpoints require `Authorization: ****** ID token>` (HTTP 401 otherwise). Rate limiting is per user. CORS is restricted to `CORS_ORIGINS`.
 - Unsupported providers return HTTP 400.

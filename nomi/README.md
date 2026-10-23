@@ -62,13 +62,13 @@ VITE_FIREBASE_APP_ID=your_app_id
 
 VITE_API_BASE_URL=/api
 VITE_AI_PROVIDER=claude
-VITE_AI_MODEL=claude-3-5-sonnet-20241022
+VITE_AI_MODEL=claude-sonnet-4-5
 VITE_LOG_ENDPOINT=
 VITE_MONITORING_ENABLED=false
 
 AI_SERVER_PORT=5174
 ANTHROPIC_API_KEY=your_anthropic_api_key
-ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
+ANTHROPIC_MODEL=claude-sonnet-4-5
 ```
 
 **⚠️ Sicherheit**: Die `.env` Datei enthält sensible Daten und wird nicht in Git committed!

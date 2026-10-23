@@ -26,7 +26,15 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5173")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+app.use(
+  cors({
+    origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)),
+  }),
+);
 app.use(express.json({ limit: "1mb" }));
 
 const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
@@ -36,13 +44,57 @@ if (!anthropicApiKey) {
 
 const anthropic = new Anthropic({ apiKey: anthropicApiKey });
 
+const DEFAULT_MODEL = "claude-sonnet-4-5";
+const authRequired = process.env.NODE_ENV !== "test" && process.env.AUTH_DISABLED !== "true";
+const firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY || process.env.VITE_FIREBASE_API_KEY;
+const tokenCache = new Map();
+const TOKEN_CACHE_MS = 5 * 60_000;
+
+// Verifiziert das Firebase-ID-Token ueber die Identity Toolkit REST API (keine zusaetzliche Dependency).
+async function requireAuth(req, res, next) {
+  if (!authRequired) return next();
+  const header = req.headers.authorization || "";
+  const token = header.startsWith("Bearer ") ? header.slice(7) : "";
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+  if (!firebaseWebApiKey) {
+    console.error("FIREBASE_WEB_API_KEY missing; cannot verify tokens.");
+    return res.status(500).json({ message: "Auth not configured" });
+  }
+  const cached = tokenCache.get(token);
+  if (cached && cached.expires > Date.now()) {
+    req.userId = cached.uid;
+    return next();
+  }
+  try {
+    const r = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(firebaseWebApiKey)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken: token }),
+      },
+    );
+    if (!r.ok) return res.status(401).json({ message: "Unauthorized" });
+    const data = await r.json();
+    const uid = data?.users?.[0]?.localId;
+    if (!uid) return res.status(401).json({ message: "Unauthorized" });
+    if (tokenCache.size > 1000) tokenCache.clear();
+    tokenCache.set(token, { uid, expires: Date.now() + TOKEN_CACHE_MS });
+    req.userId = uid;
+    return next();
+  } catch (error) {
+    console.error(error);
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 30;
 const rateBuckets = new Map();
 
 function rateLimit(req, res, next) {
   const now = Date.now();
-  const key = req.ip || "unknown";
+  const key = req.userId || req.ip || "unknown";
   const bucket = rateBuckets.get(key) || { count: 0, start: now };
 
   if (now - bucket.start > RATE_LIMIT_WINDOW_MS) {
@@ -82,9 +134,9 @@ const avvSchema = z.object({
   fileSizeKB: z.number().int().positive().max(10_240).optional(),
 });
 
-async function callClaude(systemPrompt, userPrompt, modelOverride, hasExamples = false) {
+async function callClaude(systemPrompt, userPrompt, _clientModel, hasExamples = false) {
   const response = await anthropic.messages.create({
-    model: modelOverride || process.env.ANTHROPIC_MODEL || "claude-3-5-sonnet-20241022",
+    model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
     max_tokens: hasExamples ? 1200 : 800,
     temperature: 0.2,
     system: systemPrompt,
@@ -110,7 +162,7 @@ function parseModelJson(text) {
   }
 }
 
-app.post("/api/incident-assistant", rateLimit, async (req, res) => {
+app.post("/api/incident-assistant", requireAuth, rateLimit, async (req, res) => {
   try {
     if (req.body.provider && req.body.provider !== "claude") {
       return res.status(400).json({ message: "Unsupported provider" });
@@ -126,7 +178,7 @@ app.post("/api/incident-assistant", rateLimit, async (req, res) => {
   }
 });
 
-app.post("/api/compliance-assistant", rateLimit, async (req, res) => {
+app.post("/api/compliance-assistant", requireAuth, rateLimit, async (req, res) => {
   try {
     if (req.body.provider && req.body.provider !== "claude") {
       return res.status(400).json({ message: "Unsupported provider" });
@@ -142,7 +194,7 @@ app.post("/api/compliance-assistant", rateLimit, async (req, res) => {
   }
 });
 
-app.post("/api/avv-assistant", rateLimit, async (req, res) => {
+app.post("/api/avv-assistant", requireAuth, rateLimit, async (req, res) => {
   try {
     if (req.body.provider && req.body.provider !== "claude") {
       return res.status(400).json({ message: "Unsupported provider" });

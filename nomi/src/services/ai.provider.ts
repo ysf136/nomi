@@ -1,3 +1,4 @@
+import { auth } from "../firebase";
 import { ApiClient } from "./api.client";
 import { ComplianceAssessment } from "../types/models";
 import { env } from "../lib/env";
@@ -62,6 +63,7 @@ export class HttpAiProvider implements AiProvider {
     this.model = options.model;
     this.api = new ApiClient({
       baseUrl: options.baseUrl ?? env.VITE_API_BASE_URL ?? "/api",
+      getAuthToken: async () => (await auth.currentUser?.getIdToken()) ?? null,
     });
   }
 
